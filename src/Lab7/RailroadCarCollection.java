@@ -1,9 +1,7 @@
 package Lab7;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Spliterator;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class RailroadCarCollection implements Set<RailroadCar> {
 
@@ -28,7 +26,7 @@ public class RailroadCarCollection implements Set<RailroadCar> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == 0 || doublyLinkedList.getHead() == null;
     }
 
     @Override
@@ -36,10 +34,7 @@ public class RailroadCarCollection implements Set<RailroadCar> {
         Node currentNode = doublyLinkedList.getHead();
         while (currentNode != null) {
             RailroadCar c = (RailroadCar) o;
-            System.out.println(currentNode.data + c.toString());
-            System.out.println((currentNode.data.amountOfPassengers == c.amountOfPassengers) && (currentNode.data.amountOfLuggage == c.amountOfLuggage) && (currentNode.data.levelOfComfort == c.levelOfComfort));
-            if (currentNode.data == o) {
-                System.out.println(currentNode.data);
+            if (currentNode.data.equals(c)) {
                 return true;
             }
             currentNode = currentNode.next;
@@ -60,15 +55,26 @@ public class RailroadCarCollection implements Set<RailroadCar> {
         boolean flag = iterator.hasNext();
         while (flag){
             array[i] = iterator.next();
-            i++;
             flag = iterator.hasNext();
+            i++;
         }
         return array;
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return null;
+        int size = size();
+        if (a.length < size){
+            a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+        } else if (a.length > size){
+            a[size] = null;
+        }
+        int i = 0;
+        for (RailroadCar railroadCar: this) {
+            a[i] = (T) railroadCar;
+            i++;
+        }
+        return a;
     }
 
     @Override
@@ -85,7 +91,7 @@ public class RailroadCarCollection implements Set<RailroadCar> {
         if (contains(o)) {
             doublyLinkedList.delete((RailroadCar) o);
             size--;
-            return contains(o);
+            return true;
         } else return false;
     }
 
@@ -118,8 +124,11 @@ public class RailroadCarCollection implements Set<RailroadCar> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        for (Object railroadCar : c) {
-            remove(railroadCar);
+        Iterator<RailroadCar> iterator = (Iterator<RailroadCar>) c.iterator();
+        boolean flag = iterator.hasNext();
+        while (flag){
+            remove(iterator.next());
+            flag = iterator.hasNext();
         }
         return containsAll(c);
     }
@@ -127,6 +136,7 @@ public class RailroadCarCollection implements Set<RailroadCar> {
     @Override
     public void clear() {
         doublyLinkedList = new DoublyLinkedList();
+        size = 0;
     }
 
     @Override
@@ -145,7 +155,6 @@ public class RailroadCarCollection implements Set<RailroadCar> {
 
         @Override
         public RailroadCar next() {
-            //System.out.println(hasNext() + currentNode.data.toString() + currentNode.next);
             RailroadCar railroadCar = currentNode.data;
             currentNode = currentNode.next;
             return railroadCar;

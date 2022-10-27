@@ -22,7 +22,7 @@ public class RailroadCar {
             return false;
         }
         RailroadCar c = (RailroadCar) o;
-        return this.amountOfPassengers == c.amountOfPassengers && this.amountOfLuggage == c.amountOfLuggage && this.levelOfComfort == c.levelOfComfort;
+        return this.typeOfRailroadCar.equals(c.typeOfRailroadCar) && this.amountOfPassengers == c.amountOfPassengers && this.amountOfLuggage == c.amountOfLuggage && this.levelOfComfort == c.levelOfComfort;
     }
 
     @Override
@@ -39,5 +39,6 @@ public class RailroadCar {
         RailroadCar vip1 = new RailroadCar(TypeOfRailroadCar.VIP, 18, 10,3);
         RailroadCar vip2 = new RailroadCar(TypeOfRailroadCar.VIP, 18, 10,3);
         System.out.println(vip1.equals(vip2));
+        System.out.println(vip1 == vip2);
     }
 }
